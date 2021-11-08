@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    //经纪人
+    class Broker {
+      constructor() {
+        this.subscribers = [] //订阅者
+        this.state = 0 //主题状态
+      }
+      addSubscriber(subscriber) { //添加订阅者
+        this.subscribers.push(subscriber)
+      }
+      setState(state) {
+        this.state = state
+        this.puplish() //发布通知
+      }
+      getState() {
+        return this.state
+      }
+      puplish() {
+        this.subscribers.forEach(i => { i.update() })
+      }
+    }
+    //订阅者
+    class Subscriber {
+      constructor(name, broker) {
+        this.name = name
+        this.broker = broker
+        broker.addSubscriber(this)
+      }
+      update() {
+        console.log(`当前主题状态：${this.broker.getState()}`)
+      }
+    }
+    // 发布者
+    class Publisher {
+      changeState(state, broker) {
+        broker.setState(state)
+      }
+    }
+    let broker = new Broker() //创建经纪人
+    let publisher = new Publisher() //发布者
+    let subsriber = new Subscriber('fans', broker) //订阅者
+    publisher.changeState(1,broker)
+  </script>
+</body>
+
+</html>
