@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    Function.prototype.myCall = function (thisArg, ...args) {
+      thisArg.f = this //指向这个方法
+      let result = thisArg.f(...args)
+      delete thisArg.f
+      return result
+    }
+    function test(a, b) {
+      this.a = a
+      this.b = b
+      return this
+    }
+    let obj = {
+      a: 1,
+      b: 2
+    }
+    console.log(test.myCall(obj, 2))
+    console.log(test.myCall(obj, 3))
+
+    Function.prototype.myBind = function (thisArg, ...args) {
+      let that = this //否则调用f() //则指向全局
+      return function (...inner) {
+        return that.apply(thisArg, [...args, ...inner])
+      }
+    }
+    let f = test.myBind(obj, 99)
+    console.log(f(100))
+    const fn = function (a, b) {
+      this.a = a
+      this.b = b
+      return this
+    }
+    const targetObj = {
+      name: '蜜瓜'
+    }
+    // 绑定函数
+    const bound = fn.bind(targetObj, 1)
+    const o = new bound(2) //直接返回fn实例 使targetObj失效
+    console.log(bound(2)) //{name: '蜜瓜', a: 1, b: 2} //返回包含targetObj的实例
+    console.log(o); // fn { a: 1, b: 2 }
+    console.log(o.constructor); // [Function: fn]
+    console.log(o.__proto__ === fn.prototype); // true
+  </script>
+</body>
+
+</html>
