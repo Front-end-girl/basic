@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function person(a, b) {
+      this.a = a;
+      this.b = b
+    }
+    person.prototype.name = '9999'
+    function myNew(constructor, ...args) {
+      let obj = {} //创建对象
+      obj.__proto__ = constructor.prototype //继承
+      let result = constructor.apply(obj, args)
+      return typeof result == 'object' ? result : obj //使this指向obj
+    }
+    let test = myNew(person, 1, 2)
+    console.log(test.name) //9999
+
+  </script>
+</body>
+
+</html>
